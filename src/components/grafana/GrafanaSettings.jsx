@@ -1,7 +1,8 @@
 // src/components/grafana/GrafanaSettings.jsx
 import { useState, useEffect, useCallback } from 'react'
+import { Send } from 'lucide-react'
 import TagInput from '../mailer/TagInput.jsx'
-import { getSettings, updateSettings } from '../../lib/api/grafana.js'
+import { getSettings, updateSettings, sendReportNow } from '../../lib/api/grafana.js'
 import { getCookie, clearCookie } from '../../lib/auth.js'
 
 export default function GrafanaSettings() {
@@ -14,6 +15,8 @@ export default function GrafanaSettings() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sendSuccess, setSendSuccess] = useState('')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -50,6 +53,21 @@ export default function GrafanaSettings() {
       else setError('저장에 실패했습니다.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleSendNow = async () => {
+    setSending(true)
+    setError('')
+    setSendSuccess('')
+    try {
+      const result = await sendReportNow(password)
+      setSendSuccess(`✓ 리포트가 ${result.recipients}명에게 발송되었습니다.`)
+    } catch (e) {
+      if (e.message === 'UNAUTHORIZED') clearCookie()
+      else setError(e.message || '발송에 실패했습니다.')
+    } finally {
+      setSending(false)
     }
   }
 
@@ -104,9 +122,24 @@ export default function GrafanaSettings() {
       </div>
 
       {error && <div className="grafana-error">{error}</div>}
+      {sendSuccess && <div className="grafana-success">{sendSuccess}</div>}
+
+      <div className="grafana-schedule-info">
+        <p>📅 현재 설정</p>
+        <ul style={{ fontSize: '0.9rem', color: '#666', margin: '8px 0 0 0', paddingLeft: '20px' }}>
+          <li>발송 시각: {String(sendHour).padStart(2, '0')}:00 (KST)</li>
+          <li>자동 발송: {enabled ? '활성화' : '비활성화'}</li>
+          <li>수신자: {recipients.length > 0 ? `${recipients.length}명` : '기본값 사용'}</li>
+        </ul>
+      </div>
+
       <div className="modal-actions">
         <button type="submit" className="modal-submit" disabled={saving}>
           {saving ? '저장 중…' : saved ? '저장됨 ✓' : '저장'}
+        </button>
+        <button type="button" className="modal-submit secondary" onClick={handleSendNow} disabled={sending} style={{ marginLeft: '8px' }}>
+          <Send size={14} style={{ marginRight: '4px' }} />
+          {sending ? '발송 중…' : '지금 보내기'}
         </button>
       </div>
     </form>

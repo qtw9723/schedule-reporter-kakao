@@ -330,8 +330,13 @@ body {
   color: #fff;
   cursor: pointer;
   transition: background 150ms ease;
+  display: flex;
+  align-items: center;
 }
 .modal-submit:hover { background: #b0a4fd; }
+.modal-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+.modal-submit.secondary { background: rgba(157,143,252,0.5); }
+.modal-submit.secondary:hover { background: rgba(157,143,252,0.65); }
 
 /* ── 태그 입력 ── */
 .tag-input-wrap {
@@ -777,6 +782,8 @@ body {
 /* ── Grafana 리포트 ── */
 .grafana-wrap { padding: 20px 24px; max-width: 900px; margin: 0 auto; }
 .grafana-error { background: rgba(198,40,40,0.12); color: #ff8a80; border: 1px solid rgba(198,40,40,0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+.grafana-success { background: rgba(46,125,50,0.12); color: #81c784; border: 1px solid rgba(46,125,50,0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+.grafana-schedule-info { background: rgba(157,143,252,0.08); border: 1px solid rgba(157,143,252,0.2); border-radius: 8px; padding: 12px 14px; margin: 20px 0 16px; font-size: 13px; }
 .grafana-summary { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-radius: 10px; font-weight: 700; font-size: 15px; margin-bottom: 20px; }
 .grafana-summary.ok { background: rgba(46,125,50,0.15); color: #81c784; border: 1px solid rgba(46,125,50,0.35); }
 .grafana-summary.alert { background: rgba(198,40,40,0.15); color: #ff8a80; border: 1px solid rgba(198,40,40,0.35); }

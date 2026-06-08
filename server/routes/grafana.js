@@ -70,6 +70,21 @@ router.put('/settings', auth, async (req, res) => {
   }
 })
 
+// POST /api/grafana/send-now — 즉시 리포트 발송 (웹 UI)
+router.post('/send-now', auth, async (req, res) => {
+  try {
+    const settings = await getSettings()
+    const recipients = settings.recipients?.length ? settings.recipients : envRecipients()
+    if (recipients.length === 0) return res.status(400).json({ error: '수신자가 설정되지 않았습니다.' })
+
+    const report = buildReport(await gatherReportData(lagFrom(settings)))
+    await sendReportEmail(buildEmailHtml(report), recipients)
+    res.json({ sent: true, recipients: recipients.length, alerts: report.summary.alerts })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
 // GET /api/grafana/tick — Supabase pg_cron이 매시간 호출. 설정대로 발송.
 // (pg_net의 http_get은 GET만 지원하므로 상태 변경이지만 GET을 사용)
 router.get('/tick', async (req, res) => {

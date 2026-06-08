@@ -32,3 +32,13 @@ export async function updateSettings(body, password) {
   if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`)
   return res.json()
 }
+
+export async function sendReportNow(password) {
+  const res = await fetch(`${BASE}/api/grafana/send-now`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-app-password': password ?? '' },
+  })
+  if (res.status === 401) throw new Error('UNAUTHORIZED')
+  if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`)
+  return res.json()
+}
