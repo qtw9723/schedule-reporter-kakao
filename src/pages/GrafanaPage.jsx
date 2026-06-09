@@ -9,7 +9,7 @@ import GrafanaSettings from '../components/grafana/GrafanaSettings.jsx'
 
 export default function GrafanaPage() {
   const password = getCookie()
-  const [tab, setTab] = useState('report')
+  const [tab, setTab] = useState('settings')
   const [report, setReport] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -33,7 +33,7 @@ export default function GrafanaPage() {
 
   return (
     <div className="app">
-      <AppHeader toolName="Grafana 리포트">
+      <AppHeader toolName="스케줄 리포터">
         {tab === 'report' && (
           <button className="app-new-btn" onClick={load} disabled={loading}>
             <RefreshCw size={14} className={loading ? 'spin' : ''} /> 새로고침
