@@ -1,5 +1,5 @@
 // supabase/functions/mailer/smtp.ts
-import nodemailer from "npm:nodemailer@6"
+import nodemailer from "npm:nodemailer@10.4.1"
 import { createClient } from "jsr:@supabase/supabase-js@2"
 
 interface Attachment {
